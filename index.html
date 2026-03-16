@@ -7,176 +7,204 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="snow-container">
-        <canvas id="snow-canvas"></canvas>
-    </div>
+    <div class="gradient-bg"></div>
+    <canvas id="snow-canvas"></canvas>
 
-    <!-- Главная страница -->
+    <!-- ГЛАВНАЯ -->
     <div id="main-page" class="page active">
         <div class="header">
-            <div class="logo-container">
-                <div class="logo">TC</div>
-            </div>
-            <div class="title-container">
-                <h1 class="gradient-title">TEST<br><span class="cases-subtitle">CASES</span></h1>
+            <div class="logo">TC</div>
+            <h1 class="title-graffiti">TEST CASES</h1>
+        </div>
+
+        <div class="balance-block">
+            <span class="balance-label">БАЛАНС</span>
+            <div class="balance-row">
+                <span class="diamond">💎</span>
+                <span class="balance-amount" id="balance">6</span>
+                <button class="btn-replenish" onclick="showPage('replenish')">+</button>
             </div>
         </div>
 
-        <div class="balance-section">
-            <div class="balance-label">БАЛАНС</div>
-            <div class="balance-amount">
-                <span class="diamond-icon">💎</span>
-                <span id="balance-value">6</span>
-            </div>
-            <button class="replenish-btn" onclick="showPage('replenish-page')">ПОПОЛНИТЬ</button>
-        </div>
-
-        <div class="tasks-section">
+        <div class="tasks">
             <h2>ЗАДАНИЯ</h2>
-            <div class="task-item">
+            <div class="task-item" id="task-channel">
                 <div class="task-info">
-                    <div class="task-title">Подпишитесь на наш канал</div>
-                    <div class="task-reward">+2000 💎</div>
+                    <div>Подпишись на канал</div>
+                    <div class="reward">+2000 💎</div>
                 </div>
-                <button class="task-btn" onclick="completeTask('channel')">ПРОВЕРИТЬ</button>
+                <button class="task-btn" onclick="checkSubscription()">ПРОВЕРИТЬ</button>
             </div>
-            <div class="task-item">
+            <div class="task-item" id="task-ref">
                 <div class="task-info">
-                    <div class="task-title">Пригласите друга</div>
-                    <div class="task-reward">+5000 💎</div>
+                    <div>Пригласи друга</div>
+                    <div class="reward">+5000 💎</div>
                 </div>
-                <button class="task-btn" onclick="completeTask('friend')">ПРОВЕРИТЬ</button>
+                <button class="task-btn" onclick="inviteFriend()">ПРИГЛАСИТЬ</button>
             </div>
         </div>
     </div>
 
-    <!-- Страница пополнения -->
-    <div id="replenish-page" class="page">
+    <!-- ПОПОЛНЕНИЕ -->
+    <div id="replenish" class="page">
         <button class="back-btn" onclick="showPage('main-page')">← НАЗАД</button>
-        <h2 class="page-title">ПОПОЛНЕНИЕ БАЛАНСА</h2>
+        <h2>ПОПОЛНЕНИЕ БАЛАНСА</h2>
         
         <div class="payment-methods">
-            <div class="method-header">ВЫБЕРИТЕ СПОСОБ ОПЛАТЫ</div>
-            <div class="method-item selected">
-                <span>Telegram Stars</span>
-                <span class="check">✓</span>
-            </div>
-            <div class="method-item disabled">
-                <span>Скины Steam</span>
-                <span class="soon">СКОРО</span>
-            </div>
-            <div class="method-item disabled">
-                <span>UZS (Узбекистан)</span>
-                <span class="soon">СКОРО</span>
-            </div>
-            <div class="method-item disabled">
-                <span>KZT (Казахстан)</span>
-                <span class="soon">СКОРО</span>
-            </div>
+            <div class="method active">Telegram Stars</div>
+            <div class="method disabled">Скины Steam</div>
+            <div class="method disabled">UZS</div>
+            <div class="method disabled">KZT</div>
         </div>
 
-        <div class="amount-section">
-            <div class="amount-title">ВЫБЕРИТЕ СУММУ</div>
-            <div class="amount-grid">
-                <div class="amount-card" onclick="selectAmount(1250, 5)">
-                    <span class="crystals">1 250 ★</span>
-                    <span class="stars">5 ⭐</span>
-                </div>
-                <div class="amount-card popular" onclick="selectAmount(125000, 500)">
-                    <span class="popular-badge">ПОПУЛЯРНО</span>
-                    <span class="crystals">125 000 ★</span>
-                    <span class="stars">500 ⭐</span>
-                </div>
-                <div class="amount-card" onclick="selectAmount(5000, 20)">
-                    <span class="crystals">5 000 ★</span>
-                    <span class="stars">20 ⭐</span>
-                </div>
-                <div class="amount-card" onclick="selectAmount(12500, 50)">
-                    <span class="crystals">12 500 ★</span>
-                    <span class="stars">50 ⭐</span>
-                </div>
-                <div class="amount-card" onclick="selectAmount(25000, 100)">
-                    <span class="crystals">25 000 ★</span>
-                    <span class="stars">100 ⭐</span>
-                </div>
-                <div class="amount-card" onclick="selectAmount(62500, 250)">
-                    <span class="crystals">62 500 ★</span>
-                    <span class="stars">250 ⭐</span>
-                </div>
+        <div class="amounts">
+            <div class="amount-card" onclick="selectAmount(1250, 5)">
+                <span class="crystals">1 250 ★</span>
+                <span class="stars">5 ⭐</span>
             </div>
-        </div>
-
-        <div id="confirm-modal" class="modal">
-            <div class="modal-content">
-                <p>Вы точно хотите приобрести <span id="selected-crystals"></span> кристаллов за <span id="selected-stars"></span> звёзд?</p>
-                <div class="modal-buttons">
-                    <button class="modal-confirm" onclick="confirmPayment()">ПОДТВЕРДИТЬ</button>
-                    <button class="modal-cancel" onclick="closeModal()">ОТМЕНА</button>
-                </div>
-                <small>Совершая покупку, Вы принимаете условия Telegram</small>
+            <div class="amount-card popular" onclick="selectAmount(125000, 500)">
+                <span class="pop-badge">🔥 ПОПУЛЯРНО</span>
+                <span class="crystals">125 000 ★</span>
+                <span class="stars">500 ⭐</span>
+            </div>
+            <div class="amount-card" onclick="selectAmount(5000, 20)">
+                <span class="crystals">5 000 ★</span>
+                <span class="stars">20 ⭐</span>
+            </div>
+            <div class="amount-card" onclick="selectAmount(12500, 50)">
+                <span class="crystals">12 500 ★</span>
+                <span class="stars">50 ⭐</span>
+            </div>
+            <div class="amount-card" onclick="selectAmount(25000, 100)">
+                <span class="crystals">25 000 ★</span>
+                <span class="stars">100 ⭐</span>
+            </div>
+            <div class="amount-card" onclick="selectAmount(62500, 250)">
+                <span class="crystals">62 500 ★</span>
+                <span class="stars">250 ⭐</span>
             </div>
         </div>
     </div>
 
-    <!-- Страница Игры -->
-    <div id="games-page" class="page">
+    <!-- ИГРЫ -->
+    <div id="games" class="page">
         <button class="back-btn" onclick="showPage('main-page')">← НАЗАД</button>
-        <h2 class="page-title">ИГРЫ</h2>
+        <h2>ИГРЫ</h2>
         
         <div class="games-menu">
-            <div class="game-menu-item active" onclick="showGameSection('cases')">КЕЙСЫ</div>
-            <div class="game-menu-item" onclick="showGameSection('upgrades')">АПГРЕЙДЫ</div>
-            <div class="game-menu-item" onclick="showGameSection('contracts')">КОНТРАКТЫ</div>
-            <div class="game-menu-item" onclick="showGameSection('shop')">МАГАЗИН</div>
+            <button class="game-menu-btn active" onclick="showGame('cases')">КЕЙСЫ</button>
+            <button class="game-menu-btn" onclick="showGame('upgrades')">АПГРЕЙДЫ</button>
+            <button class="game-menu-btn" onclick="showGame('contracts')">КОНТРАКТЫ</button>
+            <button class="game-menu-btn" onclick="showGame('shop')">МАГАЗИН</button>
         </div>
 
+        <!-- КЕЙСЫ -->
         <div id="cases-section" class="game-section active">
-            <!-- Кейсы будут загружаться через JS -->
+            <div class="cases-grid" id="cases-grid"></div>
         </div>
+
+        <!-- АПГРЕЙДЫ -->
         <div id="upgrades-section" class="game-section">
-            <div class="placeholder">СКОРО...</div>
+            <div class="upgrade-info">Выбери скин для апгрейда</div>
+            <div class="inventory-select" id="upgrade-select"></div>
+            <div class="multipliers">
+                <button class="multi-btn" onclick="selectMultiplier(1)">1x</button>
+                <button class="multi-btn" onclick="selectMultiplier(2)">2x</button>
+                <button class="multi-btn" onclick="selectMultiplier(5)">5x</button>
+                <button class="multi-btn" onclick="selectMultiplier(10)">10x</button>
+            </div>
+            <button class="btn-upgrade" onclick="startUpgrade()" disabled id="upgrade-btn">ЗАПУСТИТЬ АПГРЕЙД</button>
         </div>
+
+        <!-- КОНТРАКТЫ -->
         <div id="contracts-section" class="game-section">
             <div class="placeholder">СКОРО...</div>
         </div>
+
+        <!-- МАГАЗИН -->
         <div id="shop-section" class="game-section">
             <div class="placeholder">СКОРО...</div>
         </div>
     </div>
 
-    <!-- Страница Инвентарь -->
-    <div id="inventory-page" class="page">
+    <!-- ИНВЕНТАРЬ -->
+    <div id="inventory" class="page">
         <button class="back-btn" onclick="showPage('main-page')">← НАЗАД</button>
-        <h2 class="page-title">ИНВЕНТАРЬ</h2>
-        <div class="inventory-grid">
-            <!-- Сюда будут добавляться скины -->
-        </div>
+        <h2>ИНВЕНТАРЬ</h2>
+        <div class="inventory-grid" id="inventory-grid"></div>
     </div>
 
-    <!-- Страница Профиль -->
-    <div id="profile-page" class="page">
+    <!-- ПРОФИЛЬ -->
+    <div id="profile" class="page">
         <button class="back-btn" onclick="showPage('main-page')">← НАЗАД</button>
-        <h2 class="page-title">ПРОФИЛЬ</h2>
+        <h2>ПРОФИЛЬ</h2>
         <div class="profile-info">
-            <div class="profile-item">
-                <span>Имя:</span>
-                <span id="profile-name">Игрок</span>
+            <div class="profile-row">
+                <span>ID:</span>
+                <span id="user-id">123456</span>
             </div>
-            <div class="profile-item">
+            <div class="profile-row">
                 <span>Баланс:</span>
                 <span id="profile-balance">6 💎</span>
             </div>
+            <div class="profile-row">
+                <span>Рефералов:</span>
+                <span id="ref-count">0</span>
+            </div>
         </div>
     </div>
 
-    <!-- Нижняя навигация -->
+    <!-- МОДАЛКА ОТКРЫТИЯ КЕЙСА -->
+    <div id="case-modal" class="modal">
+        <div class="modal-content case-result">
+            <h3>ОТКРЫТИЕ КЕЙСА</h3>
+            <div class="roulette" id="roulette">
+                <div class="roulette-items" id="roulette-items"></div>
+            </div>
+            <div class="result-skin" id="result-skin"></div>
+            <div class="result-actions">
+                <button class="action-btn sell" onclick="sellSkin()">ПРОДАТЬ</button>
+                <button class="action-btn upgrade" onclick="sendToUpgrade()">В АПГРЕЙД</button>
+                <button class="action-btn keep" onclick="keepSkin()">ОСТАВИТЬ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА АПГРЕЙДА -->
+    <div id="upgrade-modal" class="modal">
+        <div class="modal-content upgrade-result">
+            <h3>АПГРЕЙД</h3>
+            <div class="upgrade-wheel" id="upgrade-wheel">
+                <div class="segment green" style="transform: rotate(0deg)">WIN</div>
+                <div class="segment gray" style="transform: rotate(180deg)">LOSE</div>
+                <div class="arrow">▼</div>
+            </div>
+            <div class="upgrade-result-text" id="upgrade-result"></div>
+            <button class="modal-close" onclick="closeUpgradeModal()">ОК</button>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА ПРОДАЖИ -->
+    <div id="sell-modal" class="modal">
+        <div class="modal-content">
+            <h3>ПРОДАЖА СКИНА</h3>
+            <p>Продать скин за <span id="sell-price">0</span> 💎?</p>
+            <div class="modal-buttons">
+                <button class="modal-confirm" onclick="confirmSell()">ПРОДАТЬ</button>
+                <button class="modal-cancel" onclick="closeSellModal()">ОТМЕНА</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- НИЖНЕЕ МЕНЮ -->
     <nav class="bottom-nav">
-        <div class="nav-item active" onclick="showPage('main-page')">ГЛАВНАЯ</div>
-        <div class="nav-item" onclick="showPage('games-page')">ИГРЫ</div>
-        <div class="nav-item" onclick="showPage('inventory-page')">ИНВЕНТАРЬ</div>
-        <div class="nav-item" onclick="showPage('profile-page')">ПРОФИЛЬ</div>
+        <button class="nav-btn active" onclick="showPage('main-page')">ГЛАВНАЯ</button>
+        <button class="nav-btn" onclick="showPage('games')">ИГРЫ</button>
+        <button class="nav-btn" onclick="showPage('inventory')">ИНВЕНТАРЬ</button>
+        <button class="nav-btn" onclick="showPage('profile')">ПРОФИЛЬ</button>
     </nav>
 
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
