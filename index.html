@@ -48,7 +48,7 @@
     <!-- ПОПОЛНЕНИЕ -->
     <div id="replenish" class="page">
         <button class="back-btn" onclick="showPage('main-page')">← НАЗАД</button>
-        <h2>ПОПОЛНЕНИЕ БАЛАНСА</h2>
+        <h2>ПОПОЛНЕНИЕ</h2>
         
         <div class="payment-methods">
             <div class="method active">Telegram Stars</div>
@@ -105,15 +105,41 @@
 
         <!-- АПГРЕЙДЫ -->
         <div id="upgrades-section" class="game-section">
-            <div class="upgrade-info">Выбери скин для апгрейда</div>
-            <div class="inventory-select" id="upgrade-select"></div>
-            <div class="multipliers">
-                <button class="multi-btn" onclick="selectMultiplier(1)">1x</button>
-                <button class="multi-btn" onclick="selectMultiplier(2)">2x</button>
-                <button class="multi-btn" onclick="selectMultiplier(5)">5x</button>
-                <button class="multi-btn" onclick="selectMultiplier(10)">10x</button>
+            <div class="upgrade-container">
+                <div class="upgrade-items">
+                    <div class="upgrade-source">
+                        <div class="upgrade-source-img" id="source-skin-img"></div>
+                        <div class="upgrade-source-name" id="source-skin-name">Не выбран</div>
+                        <div class="upgrade-source-price" id="source-skin-price">0</div>
+                    </div>
+                    <div class="upgrade-arrow">→</div>
+                    <div class="upgrade-target">
+                        <div class="upgrade-target-img" id="target-skin-img"></div>
+                        <div class="upgrade-target-name" id="target-skin-name">Целевой</div>
+                        <div class="upgrade-target-price" id="target-skin-price">0</div>
+                    </div>
+                </div>
+
+                <div class="upgrade-chance-block">
+                    <div class="upgrade-chance-label">ШАНС УЛУЧШЕНИЯ</div>
+                    <div class="upgrade-chance" id="upgrade-chance">61</div>
+                    <div class="upgrade-chance-label">%</div>
+                </div>
+
+                <div class="multipliers">
+                    <button class="multi-btn" onclick="selectMultiplier(1.5)">x1.5</button>
+                    <button class="multi-btn" onclick="selectMultiplier(2)">x2</button>
+                    <button class="multi-btn active" onclick="selectMultiplier(5)">x5</button>
+                    <button class="multi-btn" onclick="selectMultiplier(10)">x10</button>
+                </div>
+
+                <div class="inventory-select" id="upgrade-select"></div>
+                
+                <button class="btn-upgrade" onclick="startUpgrade()" disabled id="upgrade-btn">
+                    УЛУЧШИТЬ
+                </button>
+                <small style="display: block; text-align: center; margin-top: 5px; opacity: 0.5;">⚡ Изменить код удачи</small>
             </div>
-            <button class="btn-upgrade" onclick="startUpgrade()" disabled id="upgrade-btn">ЗАПУСТИТЬ АПГРЕЙД</button>
         </div>
 
         <!-- КОНТРАКТЫ -->
@@ -154,41 +180,69 @@
         </div>
     </div>
 
+    <!-- МОДАЛКА ПОДТВЕРЖДЕНИЯ КЕЙСА -->
+    <div id="confirm-case-modal" class="modal">
+        <div class="modal-content">
+            <h3 style="text-align: center; margin-bottom: 20px;">ПОДТВЕРЖДЕНИЕ</h3>
+            <div class="confirm-case-info">
+                <div class="confirm-case-name" id="confirm-case-name"></div>
+                <div class="confirm-case-price" id="confirm-case-price"></div>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-confirm" onclick="confirmOpenCase()">ОТКРЫТЬ</button>
+                <button class="modal-cancel" onclick="document.getElementById('confirm-case-modal').classList.remove('active')">ОТМЕНА</button>
+            </div>
+        </div>
+    </div>
+
     <!-- МОДАЛКА ОТКРЫТИЯ КЕЙСА -->
     <div id="case-modal" class="modal">
-        <div class="modal-content case-result">
-            <h3>ОТКРЫТИЕ КЕЙСА</h3>
+        <div class="modal-content">
+            <h3 style="text-align: center; margin-bottom: 15px;">ОТКРЫТИЕ КЕЙСА</h3>
+            
+            <!-- Рулетка -->
             <div class="roulette" id="roulette">
                 <div class="roulette-items" id="roulette-items"></div>
             </div>
-            <div class="result-skin" id="result-skin"></div>
-            <div class="result-actions">
-                <button class="action-btn sell" onclick="sellSkin()">ПРОДАТЬ</button>
-                <button class="action-btn upgrade" onclick="sendToUpgrade()">В АПГРЕЙД</button>
-                <button class="action-btn keep" onclick="keepSkin()">ОСТАВИТЬ</button>
+
+            <!-- Результат (скрыт пока не выпадет скин) -->
+            <div id="case-result" class="case-result">
+                <div class="result-skin-img" id="result-skin-img"></div>
+                <div class="result-skin-name" id="result-skin-name"></div>
+                <div class="result-skin-quality" id="result-skin-quality"></div>
+                <div class="result-skin-price" id="result-skin-price"></div>
+                
+                <div class="result-actions">
+                    <button class="action-btn sell" onclick="sellSkin()">ПРОДАТЬ</button>
+                    <button class="action-btn upgrade" onclick="sendToUpgrade()">УЛУЧШИТЬ</button>
+                    <button class="action-btn keep" onclick="keepSkin()">ЗАБРАТЬ</button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- МОДАЛКА АПГРЕЙДА -->
     <div id="upgrade-modal" class="modal">
-        <div class="modal-content upgrade-result">
-            <h3>АПГРЕЙД</h3>
-            <div class="upgrade-wheel" id="upgrade-wheel">
-                <div class="segment green" style="transform: rotate(0deg)">WIN</div>
-                <div class="segment gray" style="transform: rotate(180deg)">LOSE</div>
-                <div class="arrow">▼</div>
+        <div class="modal-content">
+            <h3 style="text-align: center; margin-bottom: 20px;">АПГРЕЙД</h3>
+            
+            <div class="upgrade-wheel-container">
+                <div class="upgrade-wheel" id="upgrade-wheel">
+                    <div class="wheel-segment win">WIN</div>
+                    <div class="wheel-segment lose">LOSE</div>
+                </div>
+                <div class="wheel-arrow">▼</div>
             </div>
+
             <div class="upgrade-result-text" id="upgrade-result"></div>
-            <button class="modal-close" onclick="closeUpgradeModal()">ОК</button>
         </div>
     </div>
 
     <!-- МОДАЛКА ПРОДАЖИ -->
     <div id="sell-modal" class="modal">
         <div class="modal-content">
-            <h3>ПРОДАЖА СКИНА</h3>
-            <p>Продать скин за <span id="sell-price">0</span> 💎?</p>
+            <h3 style="text-align: center; margin-bottom: 20px;">ПРОДАЖА</h3>
+            <p style="text-align: center; margin-bottom: 20px;">Продать скин за <span id="sell-price" style="color: #ffd700; font-weight: 900;">0</span> 💎?</p>
             <div class="modal-buttons">
                 <button class="modal-confirm" onclick="confirmSell()">ПРОДАТЬ</button>
                 <button class="modal-cancel" onclick="closeSellModal()">ОТМЕНА</button>
