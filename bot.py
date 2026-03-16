@@ -6,7 +6,7 @@ from aiogram.types import WebAppInfo, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.enums import ParseMode
 import json
 
-BOT_TOKEN = "8613747361:AAHz3fnew8gGNORgGtF804iZ9fVydcB5uGk"  # ВСТАВЬТЕ СВОЙ ТОКЕН
+BOT_TOKEN = "8608235653:AAHorckGUSl8_tdIOzrfCX_gK0-FXdCvVMo"  # ВСТАВЬТЕ СВОЙ ТОКЕН
 CHANNEL_ID = "@alonewhat"  # Ваш канал
 
 bot = Bot(token=BOT_TOKEN)
